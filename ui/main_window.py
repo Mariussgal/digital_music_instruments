@@ -1,8 +1,6 @@
 import os
 import sys
-from PyQt5.QtWidgets import (QMainWindow, QApplication, QAction, QFileDialog, 
-                            QSpinBox, QLabel, QVBoxLayout, QHBoxLayout, 
-                            QWidget, QToolBar, QStatusBar, QStackedWidget)
+from PyQt5.QtWidgets import (QMainWindow, QApplication, QAction, QFileDialog, QSpinBox, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QToolBar, QStatusBar, QStackedWidget)
 from PyQt5.QtCore import QSize
 
 from core.settings import get_settings
@@ -141,8 +139,9 @@ class MainWindow(QMainWindow):
         self.xylophone_action.setChecked(instrument == "xylophone")
         self.videogame_action.setChecked(instrument == "videogame")
 
-        self.octaves_label.setVisible(instrument in ["piano", "videogame"])
-        self.octaves_spinbox.setVisible(instrument in ["piano", "videogame"])
+        self.octaves_label.setVisible(instrument in ["piano", "videogame", "xylophone"])
+        self.octaves_spinbox.setVisible(instrument in ["piano", "videogame", "xylophone"])
+    
 
         if instrument == "piano":
             self.instruments_stack.setCurrentWidget(self.piano_widget)
@@ -161,6 +160,8 @@ class MainWindow(QMainWindow):
             self.piano_widget.set_octaves(value)
         elif current_instrument == "videogame":
             self.videogame_widget.set_octaves(value)
+        elif current_instrument == "xylophone":
+            self.xylophone_widget.set_octaves(value)
         self.status_bar.showMessage(f"Changed to {value} octaves")
     
     def _open_file(self):
