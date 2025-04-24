@@ -125,7 +125,7 @@ class MainWindow(QMainWindow):
 
         self.piano_widget = PianoWidget(octaves=self.settings.get_octaves())
         self.xylophone_widget = XylophoneWidget()
-        self.videogame_widget = VideogameWidget()
+        self.videogame_widget = VideogameWidget(octaves=self.settings.get_octaves())
 
         self.instruments_stack.addWidget(self.piano_widget)
         self.instruments_stack.addWidget(self.xylophone_widget)
@@ -141,8 +141,8 @@ class MainWindow(QMainWindow):
         self.xylophone_action.setChecked(instrument == "xylophone")
         self.videogame_action.setChecked(instrument == "videogame")
 
-        self.octaves_label.setVisible(instrument == "piano")
-        self.octaves_spinbox.setVisible(instrument == "piano")
+        self.octaves_label.setVisible(instrument in ["piano", "videogame"])
+        self.octaves_spinbox.setVisible(instrument in ["piano", "videogame"])
 
         if instrument == "piano":
             self.instruments_stack.setCurrentWidget(self.piano_widget)
@@ -156,7 +156,11 @@ class MainWindow(QMainWindow):
     def _on_octaves_changed(self, value):
 
         self.settings.set_octaves(value)
-        self.piano_widget.set_octaves(value)
+        current_instrument = self.settings.get_instrument()
+        if current_instrument == "piano":
+            self.piano_widget.set_octaves(value)
+        elif current_instrument == "videogame":
+            self.videogame_widget.set_octaves(value)
         self.status_bar.showMessage(f"Changed to {value} octaves")
     
     def _open_file(self):
