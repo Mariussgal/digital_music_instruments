@@ -54,6 +54,7 @@ project-root/
 │
 ├── main.py                    # Application entry point
 ├── instruments.py             # Sound and frequency management
+├── settings.json              # init settings for instruments
 │
 ├── core/                      # Core modules
 │   ├── __init__.py
