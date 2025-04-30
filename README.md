@@ -62,16 +62,11 @@ project-root/
 │   └── recorder.py            # Note recording
 │
 ├── ui/                        # User interface
-│   ├── __init__.py
-│   ├── main_window.py         # Main window
-│   ├── piano_widget.py        # Piano instrument
-│   ├── xylophone_widget.py    # Xylophone instrument
-│   ├── videogame_widget.py    # Video game instrument
-│  
-│
-└── resources/                 # Resources
-    ├── icons/                 # Icons
-    └── scores/                # Example scores
+    ├── __init__.py
+    ├── main_window.py         # Main window
+    ├── piano_widget.py        # Piano instrument
+    ├── xylophone_widget.py    # Xylophone instrument
+    ├── videogame_widget.py    # Video game instrument
 ```
 
 **🔧 Key Functions**
