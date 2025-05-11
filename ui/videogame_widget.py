@@ -1,12 +1,38 @@
 #videogame_widget.py
 
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, QSizePolicy, QScrollArea, QGridLayout)
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, QTimer
 from PyQt5.QtGui import QIcon, QFont
 import time
 import threading
 from instrument import MusicPlayer, note_to_frequency
 from core.recorder import get_recorder
+
+KEYBOARD_TO_NOTES = {
+    Qt.Key_A: "C4",
+    Qt.Key_Z: "D4",
+    Qt.Key_E: "E4",
+    Qt.Key_R: "F4",
+    Qt.Key_T: "G4",
+    Qt.Key_Y: "A4",
+    Qt.Key_U: "B4",
+    Qt.Key_I: "C5",
+    Qt.Key_O: "D5",
+    Qt.Key_P: "E5",
+    Qt.Key_W: "F5",
+    Qt.Key_X: "G5",
+    Qt.Key_C: "A5",
+    Qt.Key_V: "B5",
+    Qt.Key_1: "C6",
+    Qt.Key_2: "D6",
+    Qt.Key_3: "E6",
+    Qt.Key_4: "F6",
+    Qt.Key_5: "G6",
+    Qt.Key_6: "A6",
+    Qt.Key_7: "B6",
+}
+
+
 
 class GameButton(QPushButton):    
     def __init__(self, icon_name, note, parent=None):
@@ -92,6 +118,8 @@ class VideogameWidget(QWidget):
         self._init_ui()
     
     def _init_ui(self):
+        #Builds the graphical interface of the video game mode.
+        #Displays information, the button grid, and configures keyboard focus.
         main_layout = QVBoxLayout()
         self.setLayout(main_layout)
 
@@ -102,10 +130,18 @@ class VideogameWidget(QWidget):
         main_layout.addWidget(self.status_label)
         main_layout.addWidget(self.octaves_label)
         
+        self.setFocusPolicy(Qt.StrongFocus)
+        QTimer.singleShot(0, self.setFocus)
+        
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        
+        keyboard_info = QLabel("Use the A Z E R T Y U I O P W X C V 1 2 3 4 5 6 7 keys to play")
+        keyboard_info.setAlignment(Qt.AlignCenter)
+        keyboard_info.setStyleSheet("background-color: #e6f7ff; padding: 5px; border-radius: 3px;")
+        main_layout.addWidget(keyboard_info)
         
         self.buttons_container = QWidget()
         scroll_area.setWidget(self.buttons_container)
@@ -115,6 +151,7 @@ class VideogameWidget(QWidget):
         self._create_buttons()
     
     def _get_notes_for_octave(self):
+        #Generates the list of notes to display according to the number of octaves.
         notes = []
         
         for octave in range(4, 4 + self.octaves):
@@ -123,7 +160,18 @@ class VideogameWidget(QWidget):
         
         return notes
     
+    def keyPressEvent(self, event):
+        #Handles the press of a keyboard key.
+        #If the key corresponds to a note, plays the note and lights up the button.
+        note = KEYBOARD_TO_NOTES.get(event.key())
+        if note:
+            self._on_button_pressed(note)
+            QTimer.singleShot(150, lambda: self._on_button_released(note))
+        else:
+            super().keyPressEvent(event)
+    
     def _create_buttons(self):
+        #Creates and displays the buttons for the game.
         if self.buttons_container.layout():
             while self.buttons_container.layout().count():
                 item = self.buttons_container.layout().takeAt(0)
@@ -163,13 +211,14 @@ class VideogameWidget(QWidget):
             col = i % num_columns
             buttons_layout.addWidget(button, row, col)
             self.buttons.append(button)
-        
+         # Allows the grid to expand to fill the space
         for i in range(buttons_layout.rowCount()):
             buttons_layout.setRowStretch(i, 1)
         for i in range(buttons_layout.columnCount()):
             buttons_layout.setColumnStretch(i, 1)
     
     def _on_button_pressed(self, note):
+        #Handles the press of a button (with the mouse or keyboard).
         for button in self.buttons:
             if button.note == note:
                 button.set_pressed_style()
@@ -193,6 +242,8 @@ class VideogameWidget(QWidget):
             self.status_label.setText(f"Error playing note: {e}")
     
     def _on_button_released(self, note):
+        #Handles the release of a button (with the mouse or keyboard).
+        #Restores the normal color of the button.
         for button in self.buttons:
             if button.note == note:
                 button.set_released_style()
@@ -201,6 +252,7 @@ class VideogameWidget(QWidget):
         self.status_label.setText("Video Game ready")
     
     def set_octaves(self, octaves):
+        #Changes the number of octaves displayed and updates the interface.
         if self.octaves != octaves:
             self.octaves = octaves
             self.octaves_label.setText(f"Number of octaves: {self.octaves}")
@@ -244,7 +296,9 @@ class VideogameWidget(QWidget):
             self.is_playing_music = False
     
     def recording_started(self):
+        #Updates the status when recording starts.
         self.status_label.setText("Recording started")
     
     def recording_stopped(self):
+        #Updates the status when recording stops.
         self.status_label.setText("Recording finished")
