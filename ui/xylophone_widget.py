@@ -1,8 +1,6 @@
-#xylophone_widget.py
-
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, QSizePolicy, QScrollArea, QHBoxLayout, QGridLayout)
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, QSizePolicy, QScrollArea, QHBoxLayout)
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QFont, QColor
+from PyQt5.QtGui import QFont
 import time
 import threading
 from instrument import MusicPlayer, note_to_frequency
@@ -46,7 +44,7 @@ KEY_NAMES = {
 class XylophoneBar(QPushButton):
 
     COLORS = [
-        "#8800FF",  # Violet
+        "#8800FF",  # purple
         "#4B0082",  # Indigo
         "#0000FF",  # Blue
         "#00FF00",  # Green
@@ -140,10 +138,6 @@ class XylophoneBar(QPushButton):
         """)
 
 class XylophoneWidget(QWidget):
-    #Main widget for the xylophone instrument.
-     #Displays a virtual xylophone with colored bars representing notes.
-     #Allows playing notes with the mouse or keyboard, changing the number of octaves,
-     #recording and replaying melodies.
     NOTES = ["Do", "Ré", "Mi", "Fa", "Sol", "La", "Si", "Do"]
     ENG_NOTES = ["C", "D", "E", "F", "G", "A", "B", "C"]
     
@@ -151,14 +145,13 @@ class XylophoneWidget(QWidget):
         #Initializes the XylophoneWidget with a specified number of octaves.
         super().__init__(parent)
         self.octaves = octaves
-        self.music_player = MusicPlayer() # To play the sounds  
-        self.recorder = get_recorder() # To record the notes
+        self.music_player = MusicPlayer()
+        self.recorder = get_recorder()
         self.bars = []
         self.is_playing_music = False
         self._init_ui()
     
     def _init_ui(self):
-        #Initializes the UI of the XylophoneWidget.
         main_layout = QVBoxLayout()
         self.setLayout(main_layout)
         
@@ -268,7 +261,7 @@ class XylophoneWidget(QWidget):
             self.status_label.setText(f"Error playing note: {e}")
     
     def _on_bar_released(self, note):
-        #Handles the release of a bar (with the mouse or keyboard).
+        #Handles the release of a bar.
         #Restores the normal color of the bar.
         for bar in self.bars:
             if bar.note == note:
@@ -286,8 +279,6 @@ class XylophoneWidget(QWidget):
             self.status_label.setText(f"Changed to {octaves} octaves")
     
     def play_music(self, notes):
-        #Thread for automatically playing a sequence of notes.
-        #Handles the display and sound for each note.
         if self.is_playing_music:
             return
         
@@ -320,7 +311,6 @@ class XylophoneWidget(QWidget):
                     else:
                         time.sleep(duration)
                     
-                    # Rétablir l'apparence de la touche
                     for bar in self.bars:
                         if bar.note == note:
                             bar.set_released_style()

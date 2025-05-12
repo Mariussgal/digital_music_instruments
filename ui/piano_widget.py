@@ -339,14 +339,7 @@ class PianoWidget(QWidget):
         main_layout = QVBoxLayout()
         self.setLayout(main_layout)
         
-
         top_control_layout = QHBoxLayout()
-        
-        keyboard_info = QLabel("Use display keys to play")
-        keyboard_info.setAlignment(Qt.AlignCenter)
-        keyboard_info.setStyleSheet("background-color: #e6f7ff; padding: 5px; border-radius: 3px;")
-        main_layout.addWidget(keyboard_info)
-        
 
         info_layout = QVBoxLayout()
         self.status_label = QLabel("Piano ready")

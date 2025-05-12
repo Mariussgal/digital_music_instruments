@@ -1,5 +1,3 @@
-#videogame_widget.py
-
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, QSizePolicy, QScrollArea, QGridLayout)
 from PyQt5.QtCore import Qt, QSize, QTimer
 from PyQt5.QtGui import QIcon, QFont
@@ -161,8 +159,6 @@ class VideogameWidget(QWidget):
         return notes
     
     def keyPressEvent(self, event):
-        #Handles the press of a keyboard key.
-        #If the key corresponds to a note, plays the note and lights up the button.
         note = KEYBOARD_TO_NOTES.get(event.key())
         if note:
             self._on_button_pressed(note)
@@ -211,14 +207,13 @@ class VideogameWidget(QWidget):
             col = i % num_columns
             buttons_layout.addWidget(button, row, col)
             self.buttons.append(button)
-         # Allows the grid to expand to fill the space
         for i in range(buttons_layout.rowCount()):
             buttons_layout.setRowStretch(i, 1)
         for i in range(buttons_layout.columnCount()):
             buttons_layout.setColumnStretch(i, 1)
     
     def _on_button_pressed(self, note):
-        #Handles the press of a button (with the mouse or keyboard).
+        #Handles the press of a button.
         for button in self.buttons:
             if button.note == note:
                 button.set_pressed_style()
@@ -242,7 +237,7 @@ class VideogameWidget(QWidget):
             self.status_label.setText(f"Error playing note: {e}")
     
     def _on_button_released(self, note):
-        #Handles the release of a button (with the mouse or keyboard).
+        #Handles the release of a button
         #Restores the normal color of the button.
         for button in self.buttons:
             if button.note == note:
