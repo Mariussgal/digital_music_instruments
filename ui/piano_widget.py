@@ -1,7 +1,5 @@
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, QFrame, 
-                          QSizePolicy, QGridLayout, QHBoxLayout, QComboBox,
-                          QDialog, QDialogButtonBox, QTextEdit)
-from PyQt5.QtCore import Qt, QTimer, QEvent
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QPushButton, QLabel, QFrame, QSizePolicy, QGridLayout, QHBoxLayout, QComboBox, QDialog, QDialogButtonBox, QTextEdit)
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QColor, QPalette, QFont
 import time
 import threading
@@ -68,7 +66,7 @@ KEYBOARD_TO_NOTES = {
     Qt.Key_G: "A#4", # La#
     Qt.Key_U: "B4", # Si
     #Octave 2
-    Qt.Key_I: "C5", # Do
+    Qt.Key_I: "C5", 
     Qt.Key_H: "C#5",  
     Qt.Key_O: "D5",
     Qt.Key_J: "D#5",
@@ -108,10 +106,10 @@ KEY_NAMES = {
 
 
 class SongCheatSheetDialog(QDialog):
-    # Improved dialog window showing song playlists
+    # dialog window showing song playlists
     
     def __init__(self, song_name, song_notes, parent=None):
-       
+
         # Initializes dialog window with song name and notes.
  
         super().__init__(parent)
@@ -168,12 +166,6 @@ class SongCheatSheetDialog(QDialog):
         notes_text.setHtml(formatted_notes)
         notes_text.setStyleSheet("background-color: #f8f8f8; border: 1px solid #ddd; padding: 10px;")
         layout.addWidget(notes_text)
-        
-
-        tip_label = QLabel("Tip: Press the keys in the order shown. Notes with a ' are one octave higher.")
-        tip_label.setStyleSheet("color: #555; font-style: italic;")
-        layout.addWidget(tip_label)
-        
 
         buttons = QDialogButtonBox(QDialogButtonBox.Ok)
         buttons.accepted.connect(self.accept)
@@ -185,7 +177,7 @@ class SongCheatSheetDialog(QDialog):
 class CheatSheetButton(QPushButton):
     # Button to display the cheat sheet for the piano
     def __init__(self, parent=None):
-        super().__init__("Keystrokes", parent)
+        super().__init__("Cheat sheet", parent)
         self.setStyleSheet("background-color: #e6f7ff; border: 1px solid #99d6ff;")
         self.clicked.connect(self.show_cheatsheet_dialog)
         self.interactive_guide = None
@@ -524,7 +516,7 @@ class PianoWidget(QWidget):
         self.status_label.setText("Recording stopped")
     
     def keyPressEvent(self, event):
-        print("Touche pressée :", event.key())
+        print("Key pressed :", event.key())
         key = event.key()
         if key in KEYBOARD_TO_NOTES:
             note = KEYBOARD_TO_NOTES[key]
@@ -551,7 +543,6 @@ class PianoWidget(QWidget):
         # If the key corresponds to a note in the KEYBOARD_TO_NOTES dictionary,
         # the corresponding note is played (visual effect + sound).
         key = event.key() # Retrieves the code of the pressed key
-        key = event.key()
         if key in KEYBOARD_TO_NOTES: # Retrieves the note associated with the pressed key
             note = KEYBOARD_TO_NOTES[key] # Plays the note (visual effect + sound)
             self._on_key_pressed(note) # Calls the parent class method to handle other events 
@@ -564,14 +555,12 @@ class PianoWidget(QWidget):
             self._on_key_released(note)
         super().keyReleaseEvent(event)
 
-
         
 class InteractiveSongGuide(QWidget):
-
     
     def __init__(self, song_name, song_notes, piano_widget, parent=None):
         super().__init__(parent)
-        self.setWindowTitle(f"Guide interactif: {song_name}")
+        self.setWindowTitle(f"Interactive guide: {song_name}")
         self.song_name = song_name
         self.song_notes = self._parse_song_notes(song_notes)
         self.current_index = 0
